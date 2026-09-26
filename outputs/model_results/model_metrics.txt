@@ -1,0 +1,11 @@
+Used Car Price Prediction - Linear Regression
+
+Dataset rows before duplicate removal: 99187
+Rows after duplicate removal: 97712
+Training rows: 78169
+Testing rows: 19543
+
+MAE: 2244.6769
+MSE: 13232545.9275
+RMSE: 3637.6567
+R2 Score: 0.8653
