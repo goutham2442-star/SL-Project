@@ -404,20 +404,20 @@ function HowItWorksPage() {
       {/* ── SECTION 01 — Select Features ── */}
       <HiwSection
         number="01"
-        title="Select Features"
+        title="Select Features (The Question & Answer)"
         icon={<Layers size={20} />}
-        description="We tell the model which columns to learn from (X) and what to predict (y)."
+        description="We tell the code which columns to learn from (X) and what to predict (y)."
       >
         <CodeBlock
           code={`X = df[["year", "mileage", "tax", "mpg", "engineSize"]]\ny = df["price"]`}
           language="python"
         />
         <ExplainBlock>
-          <strong>X</strong> = input features — the car attributes the model uses to learn.<br />
-          <strong>y</strong> = target value — the actual price we want the model to predict.
+          <strong>X (Features)</strong> = The inputs we know about a car (like year, mileage, engine size). Think of this as the "question".<br />
+          <strong>y (Target)</strong> = The actual price of the car. Think of this as the "answer" we want the computer to learn.
         </ExplainBlock>
         <FlowVisual
-          steps={['Car Features', 'Linear Regression', 'Price']}
+          steps={['Car Details (X)', 'Linear Regression Code', 'Price (y)']}
           accent
         />
       </HiwSection>
@@ -425,17 +425,17 @@ function HowItWorksPage() {
       {/* ── SECTION 02 — Train / Test Split ── */}
       <HiwSection
         number="02"
-        title="Train / Test Split"
+        title="Train / Test Split (Study Guide vs Final Exam)"
         icon={<GitBranch size={20} />}
-        description="We split the dataset so we can train on most of it and test on unseen data."
+        description="We split our data so the model can learn from most of it, but we hold some back to test it later."
       >
         <CodeBlock
           code={`from sklearn.model_selection import train_test_split\n\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)`}
           language="python"
         />
         <ExplainBlock>
-          <strong>80%</strong> of the data is used for training — the model learns from this.<br />
-          <strong>20%</strong> is held back for testing — we use this to check how well the model generalises.
+          <strong>80% Training Data (X_train, y_train)</strong> = The study guide. The computer looks at these to learn the patterns.<br />
+          <strong>20% Testing Data (X_test, y_test)</strong> = The final exam. We hide these prices, let the computer guess, and check its accuracy!
         </ExplainBlock>
         <div className="split-visual">
           <div className="split-total">
@@ -446,12 +446,12 @@ function HowItWorksPage() {
           <div className="split-boxes">
             <div className="split-box split-train">
               <strong>80%</strong>
-              <span>Training Data</span>
+              <span>Study Data</span>
               <small>~79,349 cars</small>
             </div>
             <div className="split-box split-test">
               <strong>20%</strong>
-              <span>Testing Data</span>
+              <span>Exam Data</span>
               <small>~19,838 cars</small>
             </div>
           </div>
@@ -461,41 +461,39 @@ function HowItWorksPage() {
       {/* ── SECTION 03 — Train the Model ── */}
       <HiwSection
         number="03"
-        title="Train the Model"
+        title="Train the Model (Finding the Formula)"
         icon={<Play size={20} />}
-        description="We create a Linear Regression model and teach it using the training data."
+        description="This is where the actual Linear Regression happens! We teach the model using our training data."
       >
         <CodeBlock
           code={`from sklearn.linear_model import LinearRegression\n\nmodel = LinearRegression()\nmodel.fit(X_train, y_train)`}
           language="python"
         />
         <ExplainBlock>
-          <strong>LinearRegression()</strong> creates a new, untrained model object.<br />
-          <strong>model.fit()</strong> is the training step — the model learns the relationship
-          between car features and their actual prices from the training data.
+          <strong>LinearRegression()</strong> creates a blank math formula, kind of like: <br/> <code>Price = (w1 × year) + (w2 × mileage) + ... + bias</code>.<br /><br />
+          <strong>model.fit()</strong> is the magic step! The computer looks at all 80,000 training cars and calculates the perfect numbers for w1, w2, etc., so the formula fits a straight line through our data points.
         </ExplainBlock>
         <FlowVisual
-          steps={['Historical Cars', 'Features + Actual Prices', 'Training', 'Learned Relationship']}
+          steps={['Training Data', 'fit()', 'Learned Math Formula']}
         />
       </HiwSection>
 
       {/* ── SECTION 04 — Prediction ── */}
       <HiwSection
         number="04"
-        title="Prediction"
+        title="Prediction (Taking the Exam)"
         icon={<Zap size={20} />}
-        description="We use the trained model to estimate prices for cars it has never seen."
+        description="We use our newly trained formula to guess prices for cars it has never seen."
       >
         <CodeBlock
           code={`y_pred = model.predict(X_test)`}
           language="python"
         />
         <ExplainBlock>
-          <strong>predict()</strong> takes the test set features and uses the relationship learned
-          during training to estimate a price for each car. The model has never seen these cars before.
+          <strong>predict(X_test)</strong> takes the car details from our "Exam Data" (which the model hasn't seen), plugs them into the math formula it just learned, and spits out an estimated price (<strong>y_pred</strong>).
         </ExplainBlock>
         <FlowVisual
-          steps={['Car Details', 'Trained Model', 'Predicted Price']}
+          steps={['Exam Car Details', 'predict()', 'Predicted Price']}
           accent
         />
       </HiwSection>
@@ -503,20 +501,21 @@ function HowItWorksPage() {
       {/* ── SECTION 05 — Evaluation ── */}
       <HiwSection
         number="05"
-        title="Evaluation"
+        title="Evaluation (Grading the Exam)"
         icon={<BarChart3 size={20} />}
-        description="We measure how accurate the model's predictions are using standard metrics."
+        description="Did the model pass? We compare its guesses with the actual prices."
       >
         <CodeBlock
-          code={`from sklearn.metrics import mean_absolute_error\nfrom sklearn.metrics import mean_squared_error\nfrom sklearn.metrics import r2_score\n\nmae = mean_absolute_error(y_test, y_pred)\nmse = mean_squared_error(y_test, y_pred)\nrmse = mse ** 0.5\nr2 = r2_score(y_test, y_pred)`}
+          code={`from sklearn.metrics import mean_absolute_error, r2_score\n\nmae = mean_absolute_error(y_test, y_pred)\nr2 = r2_score(y_test, y_pred)`}
           language="python"
         />
+        <ExplainBlock>
+          We compare the computer's guesses (<strong>y_pred</strong>) with the actual hidden prices (<strong>y_test</strong>) to see how smart our model is!
+        </ExplainBlock>
 
         <div className="eval-grid">
-          <EvalCard metric="MAE" value="£2,244.69" description="On average, the prediction is off by about £2,245. Think of it as the typical error in pounds." />
-          <EvalCard metric="MSE" value="13,232,660.96" description="The average of squared errors. Larger errors are penalised more heavily. Mostly used to derive RMSE." />
-          <EvalCard metric="RMSE" value="£3,637.67" description="Like MAE but punishes big misses more. A typical prediction misses by roughly £3,638." />
-          <EvalCard metric="R²" value="0.8653" description="The model explains ~86.5% of the variation in price. A score of 1.0 would be perfect." highlight />
+          <EvalCard metric="MAE" value="£2,244" description="Mean Absolute Error: On average, the model's guess is off by about £2,244. Think of it as the typical mistake." />
+          <EvalCard metric="R² Score" value="0.86" description="R-Squared: The model scores an 86% on the exam! It successfully explains 86% of the reasons why prices go up or down." highlight />
         </div>
       </HiwSection>
 
